@@ -7,18 +7,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --gold: #C9A84C;
-    --gold-light: #E8C97A;
-    --gold-dim: rgba(201,168,76,0.15);
-    --navy: #0A1628;
-    --navy-mid: #112240;
-    --navy-card: #152A4A;
-    --navy-border: rgba(201,168,76,0.2);
-    --text: #EEF2FF;
-    --text-dim: #8899BB;
+    --gold: #D4E000;
+    --gold-light: #E8F230;
+    --gold-dim: rgba(212,224,0,0.13);
+    --navy: #080E05;
+    --navy-mid: #0F1A0A;
+    --navy-card: #152210;
+    --navy-border: rgba(212,224,0,0.2);
+    --text: #EEFCE8;
+    --text-dim: #6B8A5E;
     --red: #E63946;
-    --green: #52B788;
-    --blue-accent: #4FC3F7;
+    --green: #4ADE80;
+    --blue-accent: #D4E000;
     --radius: 14px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,10 +36,10 @@
     content: '';
     position: fixed; inset: 0;
     background:
-      radial-gradient(ellipse 80% 60% at 10% 0%, rgba(201,168,76,0.07) 0%, transparent 60%),
-      radial-gradient(ellipse 60% 50% at 90% 100%, rgba(79,195,247,0.05) 0%, transparent 60%),
-      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(201,168,76,0.04) 60px),
-      repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(201,168,76,0.04) 60px);
+      radial-gradient(ellipse 80% 60% at 10% 0%, rgba(40,100,20,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 100%, rgba(212,224,0,0.06) 0%, transparent 60%),
+      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(212,224,0,0.03) 60px),
+      repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(212,224,0,0.03) 60px);
     pointer-events: none; z-index: 0;
   }
 
@@ -48,7 +48,7 @@
   /* HEADER */
   header {
     border-bottom: 1px solid var(--navy-border);
-    background: rgba(10,22,40,0.9);
+    background: rgba(8,14,5,0.92);
     backdrop-filter: blur(20px);
     position: sticky; top: 0; z-index: 100;
   }
@@ -58,7 +58,7 @@
   }
   .logo-icon {
     width: 42px; height: 42px; flex-shrink: 0;
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    background: linear-gradient(135deg, #2D6A1F, #4ADE80);
     border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
     font-size: 20px;
@@ -88,7 +88,7 @@
   .search-box {
     background: var(--navy-card); border: 1px solid var(--navy-border);
     border-radius: var(--radius); padding: 4px; display: flex; gap: 8px; align-items: flex-end;
-    margin-bottom: 12px; transition: border-color 0.2s;
+    margin-bottom: 8px; transition: border-color 0.2s;
   }
   .search-box:focus-within { border-color: var(--gold); }
   .search-box textarea {
@@ -99,12 +99,39 @@
   .search-box textarea::placeholder { color: var(--text-dim); }
   .search-btn {
     flex-shrink: 0; padding: 10px 22px; background: var(--gold);
-    border: none; border-radius: 10px; color: var(--navy); font-family: 'DM Sans', sans-serif;
+    border: none; border-radius: 10px; color: #080E05; font-family: 'DM Sans', sans-serif;
     font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s;
     display: flex; align-items: center; gap: 6px; margin: 4px;
   }
   .search-btn:hover { background: var(--gold-light); }
   .search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* IMAGE TOGGLE ROW */
+  .search-options {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 10px; margin-bottom: 16px; padding: 0 2px;
+  }
+  .img-toggle-label {
+    font-size: 12px; color: var(--text-dim); cursor: pointer;
+    display: flex; align-items: center; gap: 8px; user-select: none;
+  }
+  .img-toggle-label:hover { color: var(--text); }
+  /* Toggle switch */
+  .toggle-switch {
+    position: relative; width: 36px; height: 20px; flex-shrink: 0;
+  }
+  .toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .toggle-track {
+    position: absolute; inset: 0; border-radius: 20px; background: var(--navy-mid);
+    border: 1px solid var(--navy-border); cursor: pointer; transition: background 0.2s, border-color 0.2s;
+  }
+  .toggle-thumb {
+    position: absolute; top: 3px; left: 3px; width: 12px; height: 12px;
+    border-radius: 50%; background: var(--text-dim);
+    transition: transform 0.2s, background 0.2s; pointer-events: none;
+  }
+  .toggle-switch input:checked ~ .toggle-track { background: var(--gold-dim); border-color: var(--gold); }
+  .toggle-switch input:checked ~ .toggle-track .toggle-thumb { transform: translateX(16px); background: var(--gold); }
 
   /* TABS */
   .tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--navy-card); border-radius: 12px; padding: 4px; border: 1px solid var(--navy-border); }
@@ -129,7 +156,7 @@
   .taxable-badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
   .taxable-badge.taxable { background: rgba(230,57,70,0.15); border: 1px solid rgba(230,57,70,0.3); color: var(--red); }
   .taxable-badge.exempt { background: rgba(82,183,136,0.15); border: 1px solid rgba(82,183,136,0.3); color: var(--green); }
-  .taxable-badge.mixed { background: rgba(201,168,76,0.15); border: 1px solid rgba(201,168,76,0.3); color: var(--gold); }
+  .taxable-badge.mixed { background: rgba(212,224,0,0.15); border: 1px solid rgba(212,224,0,0.3); color: var(--gold); }
   .taxable-badge.unknown { background: rgba(136,153,187,0.15); border: 1px solid rgba(136,153,187,0.3); color: var(--text-dim); }
   .answer-header-text { flex: 1; }
   .answer-header-text h3 { font-size: 16px; font-weight: 600; margin-bottom: 4px; line-height: 1.3; }
@@ -149,9 +176,9 @@
   /* LAW CITATIONS */
   .citation-list { display: flex; flex-direction: column; gap: 8px; }
   .citation {
-    background: rgba(10,22,40,0.6); border: 1px solid var(--navy-border);
+    background: rgba(8,14,5,0.6); border: 1px solid var(--navy-border);
     border-radius: 8px; padding: 12px 14px; cursor: pointer;
-    display: flex; align-items: flex-start; gap: 10; transition: border-color 0.2s;
+    display: flex; align-items: flex-start; gap: 10px; transition: border-color 0.2s;
   }
   .citation:hover { border-color: var(--gold); }
   .citation-code { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold); background: var(--gold-dim); padding: 2px 8px; border-radius: 4px; white-space: nowrap; margin-right: 10px; flex-shrink: 0; }
@@ -161,17 +188,36 @@
   /* EXAMPLES */
   .examples-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
   .example-card {
-    background: rgba(10,22,40,0.6); border: 1px solid var(--navy-border);
+    background: rgba(8,14,5,0.6); border: 1px solid var(--navy-border);
     border-radius: 10px; overflow: hidden;
   }
   .example-img { width: 100%; height: 140px; object-fit: cover; display: block; background: var(--navy); }
-  .example-img-placeholder { width: 100%; height: 140px; background: linear-gradient(135deg, var(--navy-mid), var(--navy)); display: flex; align-items: center; justify-content: center; font-size: 36px; }
+  .example-img-placeholder {
+    width: 100%; height: 60px; background: rgba(8,14,5,0.6);
+    display: flex; align-items: center; justify-content: center; font-size: 24px;
+    border-bottom: 1px solid var(--navy-border);
+  }
   .example-body { padding: 12px 14px; }
   .example-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
   .example-desc { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
   .example-status { display: inline-block; margin-top: 8px; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
   .example-status.tax { background: rgba(230,57,70,0.12); color: var(--red); }
   .example-status.exempt { background: rgba(82,183,136,0.12); color: var(--green); }
+
+  /* LOAD IMAGES BUTTON */
+  .load-images-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: transparent; border: 1px solid var(--navy-border);
+    border-radius: 8px; padding: 9px 16px; color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; margin-top: 14px;
+  }
+  .load-images-btn:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+  .load-images-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .load-images-btn .btn-spinner {
+    width: 14px; height: 14px; border: 2px solid rgba(212,224,0,0.3);
+    border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
 
   /* BROWSE SECTION */
   .browse-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 32px; }
@@ -199,7 +245,7 @@
   /* RATE TABLE */
   .rate-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
   .rate-table th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); border-bottom: 1px solid var(--navy-border); }
-  .rate-table td { padding: 11px 14px; font-size: 13px; border-bottom: 1px solid rgba(201,168,76,0.07); }
+  .rate-table td { padding: 11px 14px; font-size: 13px; border-bottom: 1px solid rgba(212,224,0,0.07); }
   .rate-table tr:last-child td { border-bottom: none; }
   .rate-table .rate-val { font-family: 'DM Mono', monospace; color: var(--gold); font-weight: 500; }
 
@@ -208,13 +254,6 @@
   .empty-icon { font-size: 48px; margin-bottom: 16px; }
   .empty-state h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 8px; color: var(--gold); }
   .empty-state p { color: var(--text-dim); font-size: 14px; max-width: 400px; margin: 0 auto; }
-
-  /* IMAGE CAROUSEL */
-  .img-carousel { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; }
-  .img-carousel::-webkit-scrollbar { height: 4px; }
-  .img-carousel::-webkit-scrollbar-track { background: var(--navy); }
-  .img-carousel::-webkit-scrollbar-thumb { background: var(--navy-border); border-radius: 2px; }
-  .img-carousel img { height: 120px; width: auto; border-radius: 8px; flex-shrink: 0; object-fit: cover; border: 1px solid var(--navy-border); }
 
   /* FOOTER */
   footer { border-top: 1px solid var(--navy-border); padding: 24px 0; margin-top: 60px; text-align: center; }
@@ -263,10 +302,23 @@
   </div>
 
   <div class="search-box">
-    <textarea id="queryInput" placeholder="e.g. &quot;Is a delivery truck subject to Louisiana sales tax?&quot; or &quot;Are nonprofit organizations exempt from sales tax?&quot;" rows="2" onkeydown="handleKey(event)"></textarea>
+    <textarea id="queryInput" placeholder='e.g. "Is a delivery truck subject to Louisiana sales tax?" or "Are nonprofit organizations exempt from sales tax?"' rows="2" onkeydown="handleKey(event)"></textarea>
     <button class="search-btn" id="searchBtn" onclick="runSearch()">
       <span>Analyze</span> <span>→</span>
     </button>
+  </div>
+
+  <!-- Image toggle option below the search box -->
+  <div class="search-options">
+    <label class="img-toggle-label" for="imgToggle">
+      📸 Load example images with results
+      <span class="toggle-switch">
+        <input type="checkbox" id="imgToggle">
+        <span class="toggle-track">
+          <span class="toggle-thumb"></span>
+        </span>
+      </span>
+    </label>
   </div>
 
   <div class="tabs">
@@ -303,35 +355,33 @@
       <div class="answer-header">
         <div class="answer-header-text">
           <h3>Louisiana State Tax Rate Schedule</h3>
-          <div class="meta">As of 2024–2025 • Subject to local additions</div>
+          <div class="meta">As of 2025 • Subject to local additions</div>
         </div>
       </div>
       <div class="answer-body">
         <div class="section-label">Sales & Use Tax</div>
         <table class="rate-table">
           <tr><th>Type</th><th>Rate</th><th>Notes</th></tr>
-          <tr><td>State Sales Tax (general)</td><td class="rate-val">4.45%</td><td>Effective July 1, 2018</td></tr>
+          <tr><td>State Sales Tax (general)</td><td class="rate-val">5.00%</td><td>Effective Jan 1, 2025 (up from 4.45%)</td></tr>
           <tr><td>Local Sales Tax (avg)</td><td class="rate-val">~5.00%</td><td>Varies by parish</td></tr>
-          <tr><td>Combined Average</td><td class="rate-val">~9.55%</td><td>One of highest in US</td></tr>
+          <tr><td>Combined Average</td><td class="rate-val">~10.00%</td><td>One of highest in US</td></tr>
           <tr><td>Prescription Drugs</td><td class="rate-val">0%</td><td>Exempt statewide</td></tr>
           <tr><td>Food (for home consumption)</td><td class="rate-val">State 0%</td><td>Local tax may apply</td></tr>
         </table>
         <div class="section-label">Individual Income Tax</div>
         <table class="rate-table">
-          <tr><th>Taxable Income (Single)</th><th>Rate</th></tr>
-          <tr><td>$0 – $12,500</td><td class="rate-val">1.85%</td></tr>
-          <tr><td>$12,501 – $50,000</td><td class="rate-val">3.50%</td></tr>
-          <tr><td>Over $50,000</td><td class="rate-val">4.25%</td></tr>
+          <tr><th>Taxable Income</th><th>Rate</th><th>Notes</th></tr>
+          <tr><td>All taxable income</td><td class="rate-val">3.00%</td><td>Flat rate effective Jan 1, 2025</td></tr>
         </table>
         <div class="section-label">Corporate & Other</div>
         <table class="rate-table">
           <tr><th>Tax Type</th><th>Rate</th></tr>
-          <tr><td>Corporate Income Tax</td><td class="rate-val">3.5% – 7.5%</td></tr>
-          <tr><td>Corporate Franchise Tax</td><td class="rate-val">$1.50/per $1,000 capital</td></tr>
+          <tr><td>Corporate Income Tax</td><td class="rate-val">5.50% flat</td></tr>
+          <tr><td>Corporate Franchise Tax</td><td class="rate-val">Eliminated Jan 1, 2026</td></tr>
           <tr><td>Motor Fuel Tax (gasoline)</td><td class="rate-val">$0.20/gallon</td></tr>
           <tr><td>Cigarette Tax</td><td class="rate-val">$1.08/pack</td></tr>
         </table>
-        <p style="margin-top:16px;font-size:12px;color:var(--text-dim);">* Rates may change. Always verify with LDR at revenue.louisiana.gov</p>
+        <p style="margin-top:16px;font-size:12px;color:var(--text-dim);">* Rates reflect 2024 Louisiana tax reform. Always verify with LDR at revenue.louisiana.gov</p>
       </div>
     </div>
   </div>
@@ -344,14 +394,16 @@
 <footer>
   <div class="wrap">
     <p>Louisiana Tax Advisor uses AI to interpret <a href="https://www.legis.la.gov/legis/Law.aspx?d=88039" target="_blank">Louisiana RS Title 47</a> and related statutes.<br>
-    This is not legal advice. Consult the <a href="https://revenue.louisiana.gov" target="_blank">Louisiana Department of Revenue</a> or a licensed tax professional for official guidance.<br>
-    Images sourced from web search for illustrative purposes only.</p>
+    This is not legal advice. Consult the <a href="https://revenue.louisiana.gov" target="_blank">Louisiana Department of Revenue</a> or a licensed tax professional for official guidance.</p>
   </div>
 </footer>
 
 <script>
-const history = [];
+// Use a separate variable name to avoid shadowing window.history
+const queryHistory = [];
 let currentTab = 'answer';
+// Store last parsed result for on-demand image loading
+let lastExamples = [];
 
 function switchTab(tab, el) {
   currentTab = tab;
@@ -369,7 +421,6 @@ function handleKey(e) {
 
 function askQuestion(q) {
   document.getElementById('queryInput').value = q;
-  // Switch to answer tab
   const tabs = document.querySelectorAll('.tab');
   switchTab('answer', tabs[0]);
   runSearch();
@@ -380,7 +431,7 @@ async function runSearch() {
   if (!q) return;
   const btn = document.getElementById('searchBtn');
   btn.disabled = true;
-  btn.innerHTML = '<span style="display:inline-block;width:14px;height:14px;border:2px solid var(--navy);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite"></span>';
+  btn.innerHTML = '<span style="display:inline-block;width:14px;height:14px;border:2px solid rgba(8,14,5,0.3);border-top-color:#080E05;border-radius:50%;animation:spin 0.8s linear infinite"></span>';
 
   document.getElementById('results').innerHTML = `
     <div class="loading-state">
@@ -388,7 +439,6 @@ async function runSearch() {
       <p>Analyzing Louisiana tax law…</p>
     </div>`;
 
-  // Switch to answer tab
   const tabs = document.querySelectorAll('.tab');
   switchTab('answer', tabs[0]);
 
@@ -424,12 +474,12 @@ Format your response as valid JSON with this EXACT structure (no markdown, no ba
   "relatedQuestions": ["Related question 1", "Related question 2"]
 }`;
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("/api/claude", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
-        max_tokens: 1800,
+        max_tokens: 2500,
         system: systemPrompt,
         messages: [{ role: "user", content: `Louisiana tax question: ${q}` }]
       })
@@ -446,12 +496,13 @@ Format your response as valid JSON with this EXACT structure (no markdown, no ba
       throw new Error('Could not parse response. Please try again.');
     }
 
-    // Add to history
-    history.unshift({ q, status: parsed.status, parsed });
+    // Store in history using safe map-based lookup
+    queryHistory.unshift({ q, status: parsed.status, parsed });
     updateHistory();
 
-    // Render answer
-    await renderAnswer(q, parsed);
+    // Check if auto-load images toggle is on
+    const autoLoadImages = document.getElementById('imgToggle').checked;
+    await renderAnswer(q, parsed, autoLoadImages);
 
   } catch(err) {
     document.getElementById('results').innerHTML = `<div class="error-msg">⚠️ ${err.message || 'An error occurred. Please try again.'}</div>`;
@@ -478,7 +529,10 @@ function statusLabel(s) {
   return '❓ Needs More Info';
 }
 
-async function renderAnswer(q, d) {
+async function renderAnswer(q, d, loadImages) {
+  // Save examples for on-demand loading
+  lastExamples = d.examples || [];
+
   let html = `
     <div class="answer-card">
       <div class="answer-header">
@@ -487,7 +541,7 @@ async function renderAnswer(q, d) {
         </div>
         <div class="answer-header-text">
           <h3>${escHtml(q)}</h3>
-          <div class="meta">${d.tpp ? '📦 Involves Tangible Personal Property (TPP) • ' : ''}Louisiana RS Title 47</div>
+          <div class="meta">${d.tpp ? '📦 Involves Tangible Personal Property (TPP) · ' : ''}Louisiana RS Title 47</div>
         </div>
       </div>
       <div class="answer-body">
@@ -513,60 +567,73 @@ async function renderAnswer(q, d) {
       </div>
     </div>`;
 
-  // Examples section placeholder
-  html += `<div class="answer-card" id="examplesCard">
-    <div class="answer-header">
-      <div class="answer-header-text"><h3>📸 Real-World Examples</h3><div class="meta">Loading examples…</div></div>
-    </div>
-    <div class="answer-body" id="examplesBody">
-      <div class="spinner" style="margin:20px auto"></div>
-    </div>
-  </div>`;
+  // Examples section — always show cards, images optional
+  if (lastExamples.length) {
+    const exCards = lastExamples.map(ex => `
+      <div class="example-card">
+        <div class="example-img-placeholder" id="img_${exIdx(ex.title)}">${ex.status === 'taxable' ? '📦' : '✅'}</div>
+        <div class="example-body">
+          <div class="example-title">${escHtml(ex.title)}</div>
+          <div class="example-desc">${escHtml(ex.description)}</div>
+          <span class="example-status ${ex.status === 'taxable' ? 'tax' : 'exempt'}">${ex.status === 'taxable' ? '⚠️ Taxable' : '✅ Exempt'}</span>
+        </div>
+      </div>`).join('');
+
+    html += `<div class="answer-card" id="examplesCard">
+      <div class="answer-header">
+        <div class="answer-header-text">
+          <h3>📋 Real-World Examples</h3>
+          <div class="meta">${lastExamples.length} example${lastExamples.length !== 1 ? 's' : ''}</div>
+        </div>
+      </div>
+      <div class="answer-body" id="examplesBody">
+        <div class="examples-grid">${exCards}</div>
+        ${!loadImages ? `<button class="load-images-btn" id="loadImagesBtn" onclick="onDemandLoadImages()">
+          <span>📸</span> <span>Load example images</span>
+        </button>` : ''}
+      </div>
+    </div>`;
+  }
 
   if (d.relatedQuestions?.length) {
     html += `<div class="section-label" style="margin-bottom:10px;">🔗 Related Questions</div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px;">
-      ${d.relatedQuestions.map(rq => `<span class="quick-chip" onclick="askQuestion('${escAttr(rq)}')">${escHtml(rq)}</span>`).join('')}
+      ${d.relatedQuestions.map(rq => `<span class="quick-chip" onclick="askQuestion(${JSON.stringify(rq)})">${escHtml(rq)}</span>`).join('')}
     </div>`;
   }
 
   document.getElementById('results').innerHTML = html;
 
-  // Load example images
-  if (d.examples?.length) {
-    let exHtml = '<div class="examples-grid">';
-    for (const ex of d.examples) {
-      exHtml += `
-        <div class="example-card">
-          <div class="example-img-placeholder" id="img_${exIdx(ex.title)}">${ex.status === 'taxable' ? '📦' : '✅'}</div>
-          <div class="example-body">
-            <div class="example-title">${escHtml(ex.title)}</div>
-            <div class="example-desc">${escHtml(ex.description)}</div>
-            <span class="example-status ${ex.status === 'taxable' ? 'tax' : 'exempt'}">${ex.status === 'taxable' ? '⚠️ Taxable' : '✅ Exempt'}</span>
-          </div>
-        </div>`;
-    }
-    exHtml += '</div>';
-    document.getElementById('examplesBody').innerHTML = exHtml;
-    document.getElementById('examplesCard').querySelector('.meta').textContent = `${d.examples.length} examples`;
-
-    // Fetch images for each example asynchronously
-    for (const ex of d.examples) {
-      if (ex.imageQuery) loadImage(ex.title, ex.imageQuery);
-    }
-  } else {
-    document.getElementById('examplesBody').innerHTML = '<p>No specific examples available for this query.</p>';
+  // Auto-load images if toggle was on
+  if (loadImages && lastExamples.length) {
+    await loadAllImages();
   }
 }
 
 function exIdx(t) { return (t||'').replace(/\W/g,'_').substring(0,20); }
+
+async function onDemandLoadImages() {
+  const btn = document.getElementById('loadImagesBtn');
+  if (!btn) return;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="btn-spinner"></span> <span>Loading images…</span>';
+  await loadAllImages();
+  btn.remove();
+}
+
+async function loadAllImages() {
+  const promises = lastExamples
+    .filter(ex => ex.imageQuery)
+    .map(ex => loadImage(ex.title, ex.imageQuery));
+  await Promise.allSettled(promises);
+}
 
 async function loadImage(title, query) {
   const id = `img_${exIdx(title)}`;
   const el = document.getElementById(id);
   if (!el) return;
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("/api/claude", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -582,12 +649,12 @@ async function loadImage(title, query) {
     const clean = txt.replace(/```json|```/g,'').trim();
     try {
       const parsed = JSON.parse(clean);
-      if (parsed.imageUrl && (parsed.imageUrl.includes('.jpg') || parsed.imageUrl.includes('.jpeg') || parsed.imageUrl.includes('.png') || parsed.imageUrl.includes('.webp'))) {
+      if (parsed.imageUrl && /\.(jpg|jpeg|png|webp)(\?|$)/i.test(parsed.imageUrl)) {
         const img = document.createElement('img');
         img.src = parsed.imageUrl;
         img.className = 'example-img';
         img.alt = title;
-        img.onerror = () => {}; // keep placeholder on error
+        img.onerror = () => {};
         img.onload = () => el.replaceWith(img);
       }
     } catch(e) {}
@@ -596,9 +663,12 @@ async function loadImage(title, query) {
 
 function updateHistory() {
   const el = document.getElementById('historyList');
-  if (!history.length) { el.innerHTML = '<div class="empty-state"><div class="empty-icon">🕓</div><h3>No History Yet</h3><p>Your recent tax questions will appear here.</p></div>'; return; }
-  el.innerHTML = history.map(h => `
-    <div class="history-item" onclick="reloadHistory('${escAttr(h.q)}', ${JSON.stringify(h.parsed).replace(/"/g,'&quot;')})">
+  if (!queryHistory.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🕓</div><h3>No History Yet</h3><p>Your recent tax questions will appear here.</p></div>';
+    return;
+  }
+  el.innerHTML = queryHistory.map((h, i) => `
+    <div class="history-item" onclick="reloadFromHistory(${i})">
       <span>${statusEmoji(h.status)}</span>
       <span class="q">${escHtml(h.q)}</span>
       <span class="badge2 ${statusBadgeClass(h.status)}" style="background:var(--gold-dim);color:var(--gold);border:1px solid var(--navy-border)">${h.status}</span>
@@ -612,20 +682,19 @@ function statusEmoji(s) {
   return '❓';
 }
 
-async function reloadHistory(q, parsed) {
+// Safe history reload — looks up by index, no DOM serialization
+function reloadFromHistory(index) {
+  const item = queryHistory[index];
+  if (!item) return;
   const tabs = document.querySelectorAll('.tab');
   switchTab('answer', tabs[0]);
-  document.getElementById('queryInput').value = q;
-  await renderAnswer(q, parsed);
+  document.getElementById('queryInput').value = item.q;
+  renderAnswer(item.q, item.parsed, false);
 }
 
 function escHtml(s) {
   if (!s) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function escAttr(s) {
-  if (!s) return '';
-  return String(s).replace(/'/g,"\\'").replace(/"/g,'\\"');
 }
 </script>
 </body>
