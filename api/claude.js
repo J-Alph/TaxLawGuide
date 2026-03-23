@@ -16,61 +16,77 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Convert Anthropic-style request to Gemini format
     const { system, messages, max_tokens } = req.body;
 
     const geminiMessages = [];
 
-    // Add system prompt as first user message if present
     if (system) {
       geminiMessages.push({
-        role: 'assistant',
-        parts: [{ text: `SYSTEM INSTRUCTIONS:\n${system}` }]
+        role: 'user',
+        parts: [{ text: `SYSTEM INSTRUCTIONS:\n${system}\n\nCRITICAL: Your response must be raw JSON only. No markdown, no backticks, no \`\`\`json, no code blocks. Just the JSON object starting with { and ending with }.` }]
       });
       geminiMessages.push({
-        role: 'assistant',
-        parts: [{ text: 'Understood. I will follow those instructions.' }]
+        role: 'model',
+        parts: [{ text: 'Understood. I will respond with raw JSON only, no markdown or code blocks.' }]
       });
     }
 
-    // Add conversation messages
     for (const msg of messages) {
       geminiMessages.push({
-        role: msg.role === 'assistant' ? 'assistant' : 'user',
+        role: msg.role === 'assistant' ? 'model' : 'user',
         parts: [{ text: typeof msg.content === 'string' ? msg.content : msg.content[0]?.text || '' }]
       });
     }
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`
-,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: geminiMessages,
-          generationConfig: {
-            maxOutputTokens: max_tokens || 2500,
-            temperature: 0.3,
-          }
-        })
-      }
-    );
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: geminiMessages,
+        generationConfig: {
+          maxOutputTokens: max_tokens || 2500,
+          temperature: 0.2,
+          responseMimeType: 'application/json',
+        }
+      })
+    });
 
     const data = await response.json();
 
     if (!response.ok) {
+      console.error('Gemini error:', JSON.stringify(data));
       return res.status(response.status).json({ error: data.error?.message || 'Gemini API error' });
     }
 
-    // Convert Gemini response back to Anthropic-style format
-    // so the HTML doesn't need any changes
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    let text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    if (!text) {
+      console.error('Empty Gemini response:', JSON.stringify(data));
+      return res.status(500).json({ error: 'Empty response from Gemini' });
+    }
+
+    // Aggressively clean any markdown wrapping Gemini adds
+    text = text
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/\s*```$/i, '')
+      .trim();
+
+    // Find the JSON object in the response
+    const start = text.indexOf('{');
+    const end = text.lastIndexOf('}');
+    if (start !== -1 && end !== -1) {
+      text = text.slice(start, end + 1);
+    }
+
     return res.status(200).json({
       content: [{ type: 'text', text }]
     });
 
   } catch (err) {
+    console.error('Handler error:', err.message);
     return res.status(500).json({ error: err.message });
   }
 }
