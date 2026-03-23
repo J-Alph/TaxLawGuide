@@ -24,11 +24,11 @@ export default async function handler(req, res) {
     // Add system prompt as first user message if present
     if (system) {
       geminiMessages.push({
-        role: 'user',
+        role: 'assistant',
         parts: [{ text: `SYSTEM INSTRUCTIONS:\n${system}` }]
       });
       geminiMessages.push({
-        role: 'model',
+        role: 'assistant',
         parts: [{ text: 'Understood. I will follow those instructions.' }]
       });
     }
@@ -36,13 +36,14 @@ export default async function handler(req, res) {
     // Add conversation messages
     for (const msg of messages) {
       geminiMessages.push({
-        role: msg.role === 'assistant' ? 'model' : 'user',
+        role: msg.role === 'assistant' ? 'assistant' : 'user',
         parts: [{ text: typeof msg.content === 'string' ? msg.content : msg.content[0]?.text || '' }]
       });
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`
+,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
