@@ -474,7 +474,7 @@ Format your response as valid JSON with this EXACT structure (no markdown, no ba
   "relatedQuestions": ["Related question 1", "Related question 2"]
 }`;
 
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
+    const response = await fetch("/api/claude", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -633,7 +633,7 @@ async function loadImage(title, query) {
   const el = document.getElementById(id);
   if (!el) return;
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("/api/claude", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
