@@ -18,27 +18,45 @@ export default async function handler(req, res) {
   try {
     const { system, messages, max_tokens } = req.body;
 
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return res.status(400).json({ error: "No messages provided." });
+    }
+
     const geminiMessages = [];
 
+    // System instructions
     if (system) {
       geminiMessages.push({
         role: 'user',
-        parts: [{ text: `SYSTEM INSTRUCTIONS:\n${system}\n\nCRITICAL: Your response must be raw JSON only. No markdown, no backticks, no \`\`\`json, no code blocks. Just the JSON object starting with { and ending with }.` }]
+        parts: [{
+          text:
+            `SYSTEM INSTRUCTIONS:\n${system}\n\n` +
+            `CRITICAL: Respond with RAW JSON only. No markdown, no backticks, no code fences.`
+        }]
       });
+
       geminiMessages.push({
-        role: 'model',
-        parts: [{ text: 'Understood. I will respond with raw JSON only, no markdown or code blocks.' }]
+        role: 'assistant',
+        parts: [{ text: 'Understood. I will respond with raw JSON only.' }]
       });
     }
 
+    // Convert conversation messages
     for (const msg of messages) {
       geminiMessages.push({
-        role: msg.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: typeof msg.content === 'string' ? msg.content : msg.content[0]?.text || '' }]
+        role: msg.role === 'assistant' ? 'assistant' : 'user',
+        parts: [{
+          text:
+            typeof msg.content === 'string'
+              ? msg.content
+              : msg.content?.[0]?.text || ''
+        }]
       });
     }
 
-    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const url =
+      `https://generativelanguage.googleapis.com/v1/models/` +
+      `gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     const response = await fetch(url, {
       method: 'POST',
@@ -47,7 +65,7 @@ export default async function handler(req, res) {
         contents: geminiMessages,
         generationConfig: {
           maxOutputTokens: max_tokens || 2500,
-          temperature: 0.2,
+          temperature: 0.2
         }
       })
     });
@@ -56,30 +74,38 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       console.error('Gemini error:', JSON.stringify(data));
-      return res.status(response.status).json({ error: data.error?.message || 'Gemini API error' });
+      return res
+        .status(response.status)
+        .json({ error: data.error?.message || 'Gemini API error' });
     }
 
-    let text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    // Extract text safely
+    let text =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ??
+      "I could not generate a response. Please try rephrasing your question.";
 
-    if (!text) {
-      console.error('Empty Gemini response:', JSON.stringify(data));
-      return res.status(500).json({ error: 'Empty response from Gemini' });
+    if (!text || typeof text !== "string") {
+      console.error("Invalid Gemini response:", JSON.stringify(data));
+      return res
+        .status(500)
+        .json({ error: "Invalid response format from Gemini" });
     }
 
-    // Aggressively clean any markdown wrapping Gemini adds
+    // Clean markdown if Gemini ignored instructions
     text = text
       .replace(/^```json\s*/i, '')
       .replace(/^```\s*/i, '')
       .replace(/\s*```$/i, '')
       .trim();
 
-    // Find the JSON object in the response
+    // Extract JSON object if wrapped in extra text
     const start = text.indexOf('{');
     const end = text.lastIndexOf('}');
     if (start !== -1 && end !== -1) {
       text = text.slice(start, end + 1);
     }
 
+    // Final output to frontend
     return res.status(200).json({
       content: [{ type: 'text', text }]
     });
