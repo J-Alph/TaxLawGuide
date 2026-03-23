@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/api/claude", "destination": "/api/claude.js" },
+    { "source": "/", "destination": "/la_tax_advisor.html" }
+  ]
+}
