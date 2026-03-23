@@ -48,7 +48,6 @@ export default async function handler(req, res) {
         generationConfig: {
           maxOutputTokens: max_tokens || 2500,
           temperature: 0.2,
-          responseMimeType: 'application/json',
         }
       })
     });
