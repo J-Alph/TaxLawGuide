@@ -23,18 +23,25 @@ export default async function handler(req, res) {
     if (system) {
       geminiMessages.push({
         role: 'user',
-        parts: [{ text: `SYSTEM INSTRUCTIONS:\n${system}\n\nCRITICAL: Your response must be raw JSON only. No markdown, no backticks, no \`\`\`json, no code blocks. Just the JSON object starting with { and ending with }.` }]
+        parts: [{
+          text: `SYSTEM INSTRUCTIONS:\n${system}\n\nCRITICAL: Your response must be raw JSON only. No markdown, no backticks, no code blocks.`
+        }]
       });
+
       geminiMessages.push({
         role: 'model',
-        parts: [{ text: 'Understood. I will respond with raw JSON only, no markdown or code blocks.' }]
+        parts: [{ text: 'Understood. I will respond with raw JSON only.' }]
       });
     }
 
     for (const msg of messages) {
       geminiMessages.push({
         role: msg.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: typeof msg.content === 'string' ? msg.content : msg.content[0]?.text || '' }]
+        parts: [{
+          text: typeof msg.content === 'string'
+            ? msg.content
+            : msg.content?.[0]?.text || ''
+        }]
       });
     }
 
@@ -52,28 +59,31 @@ export default async function handler(req, res) {
       })
     });
 
-    const geminiData = await geminiRes.json();
+    const geminiData = await response.json();
 
     if (!response.ok) {
-      console.error('Gemini error:', JSON.stringify(data));
-      return res.status(response.status).json({ error: data.error?.message || 'Gemini API error' });
+      console.error('Gemini error:', JSON.stringify(geminiData));
+      return res.status(response.status).json({
+        error: geminiData.error?.message || 'Gemini API error'
+      });
     }
 
-    let text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    let text =
+      geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
     if (!text) {
-      console.error('Empty Gemini response:', JSON.stringify(data));
+      console.error('Empty Gemini response:', JSON.stringify(geminiData));
       return res.status(500).json({ error: 'Empty response from Gemini' });
     }
 
-    // Aggressively clean any markdown wrapping Gemini adds
+    // Clean markdown
     text = text
       .replace(/^```json\s*/i, '')
       .replace(/^```\s*/i, '')
       .replace(/\s*```$/i, '')
       .trim();
 
-    // Find the JSON object in the response
+    // Extract JSON object
     const start = text.indexOf('{');
     const end = text.lastIndexOf('}');
     if (start !== -1 && end !== -1 && end > start) {
@@ -89,3 +99,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: err.message });
   }
 }
+
+
