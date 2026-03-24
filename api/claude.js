@@ -44,13 +44,13 @@ export default async function handler(req, res) {
       generationConfig: {
         maxOutputTokens: max_tokens || 2000,
         temperature: 0.2,
-        responseMimeType: 'application/json', // forces clean JSON output
+        
       },
     };
 
     // Proper system instruction (no hacks)
     if (system) {
-      body.systemInstruction = {
+      body.
         parts: [{ text: system }],
       };
     }
